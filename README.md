@@ -17,3 +17,4 @@ To-Do:
   Ability to turn off backups
   Ability to set number of backups to retain.
   Daily/Weekly/Monthly backup options.
+  Logging of crashes/backup events.
