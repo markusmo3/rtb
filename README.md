@@ -13,13 +13,8 @@ Limitations:
   This only affects people who have no GUI and are running FTB from a terminal-only setup.  People who have access to the GUI should have no problems inputting commands into the server status window.
 
 To-Do: 
-
-  Configurable backup path
-  
-  Ability to turn off backups
-  
-  Ability to set number of backups to retain.
-  
-  Daily/Weekly/Monthly backup options.
-  
-  Logging of crashes/backup events.
+* Configurable backup path
+* Ability to turn off backups
+* Ability to set number of backups to retain.
+* Daily/Weekly/Monthly backup options.
+* Logging of crashes/backup events.
