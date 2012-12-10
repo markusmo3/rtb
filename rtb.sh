@@ -5,9 +5,9 @@
 ##Path to the FTB jar file with no trailing slash:
 server_path="/root/ftb"
 ## Time to wait between backups. (In seconds)
-## Default is 14400 (4 hours)
+## Default is 14400 seconds (every 4 hours)
 backup_interval=14400
-## FTB Server start command.  Leave the trailing
+## FTB Server start command. (you can grab this from the .bat files)
 server_start="java -Xms512M -Xmx4G -jar ${server_path}/FTB-Beta-A.jar"
 ###############################################################################
 
