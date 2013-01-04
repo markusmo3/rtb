@@ -15,7 +15,8 @@ server_start="java -Xms512M -Xmx4G -jar ${server_path}/FTB-Beta-A.jar"
 ## Default is 14400 seconds (every 4 hours)
 backup_interval=86400 # daily
 ## Backup location. No trailing slash /
-backup_location="${server_path}/backup"
+## Set to something OUTSIDE the server path or it'll recursively backup your backups.
+backup_location="/root/backup"
 ## Backup Retention in DAYS
 backup_retention=15
 ####################Extended Backup Options####################################
