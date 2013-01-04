@@ -7,6 +7,7 @@ This is meant to be a simple bash script to check to see if FTB is running and l
 
 Some requirements: 
   Inotify Tools: https://github.com/rvoicilas/inotify-tools/wiki
+  
   Screen: Should be installable through pretty much any package manager.  yum/apt-get/aptitude install screen
 
 Usage:
