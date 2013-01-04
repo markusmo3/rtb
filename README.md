@@ -6,17 +6,15 @@ Revive The Beast : : Feed-The-Beast Minecraft Server Monitor &amp; Automated Bac
 This is meant to be a simple bash script to check to see if FTB is running and launch it if it's not.  In the event of a server crash, it should notice that the server is no longer running, then start it up again to minimize downtime if the person hosting the game isn't available to restart it immediately.
 
 Some requirements: 
-
-  Inotify Tools: https://github.com/rvoicilas/inotify-tools/wiki
-  
-  Screen: Should be installable through pretty much any package manager.  yum/apt-get/aptitude install screen
+* Inotify Tools: https://github.com/rvoicilas/inotify-tools/wiki
+* Screen: Should be installable through pretty much any package manager.  yum/apt-get/aptitude install screen
 
 Usage:
        $  bash /path/to/rtb.sh
-  This will set up the watcher script and inotifywait to watch for crashes/failures, plus will start the server initially.
-  The server itself will run in screen, so you can use 'screen -ls' to show current screens and 'screen -x' to connect to the running screen.
-    (Note, if there's more than one running screen, just add the PID after the -x)
-  To detatch from the screen and go drop back into terminal, hit Ctrl+A, then Ctrl+D to detach.
+  * This will set up the watcher script and inotifywait to watch for crashes/failures, plus will start the server initially.
+  * The server itself will run in screen, so you can use 'screen -ls' to show current screens and 'screen -x' to connect to the running screen.
+  * (Note, if there's more than one running screen, just add the PID after the -x)
+  * To detatch from the screen and go drop back into terminal, hit Ctrl+A, then Ctrl+D to detach.
   
 It can also perform backups of the server on set intervals to the /backup directory within the FTB directory.  Defaults to a backup every 4 hours. (14400 seconds)
 
