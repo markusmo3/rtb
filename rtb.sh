@@ -1,5 +1,9 @@
 #! /bin/bash
 
+# Some requirements
+## Screen
+## inotify (inotifywait)
+
 ######################CONFIG SECTION###########################################
 #
 ##Path to the FTB jar file with no trailing slash /
@@ -15,29 +19,28 @@ backup_location="${server_path}/backup"
 ## Backup Retention in DAYS
 backup_retention=15
 ####################Extended Backup Options####################################
-use_extended_options=1 # 0=false, 1=true
+use_extended_options=0 # 0=false, 1=true  ##NOT implemented yet
 keep_daily_backup=0 # Keep at least one backup from each day.
 keep_weekly_backup=0 # Same for weekly backup.
 keep_monthly_backup=0 # monthly
 backup_time=00:00:00 # Timestamp for when backups should be made (roughly) HH:MM:SS
 restart_after_backup=0 # restart server after performing a scheduled backup at the time above.
 ###############################################################################
-
 function ftbmon() {
+  killall screen
+  killall inotifywait
   sleep 55
+  crashlog="$server_path/detected_crashes.txt"
+  inotifywait -m -r --format '%:e %f' -e modify -e create $server_path/crash-reports/ > $crashlog &
   while [[ 1 ]]
    do
-    if [[ "$(ps faux | grep FTB-Beta-A.jar|grep -v grep)" == "" ]]
-     then echo -e "$(date) -- \e[0;31mServer NOT running...\e[0m  \e[0;33mAttempting to start.\e[0m"
-      $server_start & 
-      sleep 55
-    fi
+    server_check
     sleep 5
     epoch_time=$(date +%s)
     last_backup="$(stat -c %X $(find ${server_path}/backup/ -type f -mtime -1 -iname "backup*.zip"|grep $(date +%b)|sort|tail -n 1) 2>/dev/null)"
     [[ -z $last_backup ]] && last_backup=1 ## 1 second epoch time to force a backup if none exists.
     backup_time_diff=$(($epoch_time - $last_backup))
-    if [[ $backup_time_diff -gt $backup_interval ]] 
+    if [[ $backup_time_diff -gt $backup_interval ]]
     then
       [[ ! -d $backup_location ]] && mkdir -p $backup_location
       echo -e "$(date) -- \e[1;32mCreating a server backup:\e[0;32m Time since last backup: $backup_time_diff seconds ($(($backup_time_diff/60)) minutes) ($(($backup_time_diff/60/60)) hours)\e[0m"
@@ -52,9 +55,26 @@ function ftbmon() {
   done
 }
 
+function server_check() {
+  if [[ "$(ps faux | grep FTB-Beta-A.jar|grep -v grep|grep -vi screen)" == "" ]]
+   then echo -e "$(date) -- \e[0;31mServer NOT running...\e[0m  \e[0;33mAttempting to start.\e[0m"
+    killall screen
+    sleep 5
+    screen -S "FTB-Server" -d -m -c /dev/null -- bash -c "$server_start;exec $SHELL"
+    sleep 55
+  elif [[ $(tail -n1 $crashlog | grep CREATE) ]]
+   then echo -e "$(date) -- \e[0;31mServer crash detected...\e[0m  \e[0;33mAttempting to restart.\e[0m"
+    killall screen
+    sleep 5
+    screen -S "FTB-Server" -d -m -c /dev/null -- bash -c "$server_start;exec $SHELL"
+    echo "" > $crashlog
+    sleep 55
+  fi
+}
+
 function extended_backup() {
   echo -e "Extended backups don't do anything yet. Not a damn thing."
 }
 
 ftbmon &
-$server_start
+screen -S "FTB-Server" -d -m -c /dev/null -- bash -c "$server_start;exec $SHELL"
