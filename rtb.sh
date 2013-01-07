@@ -38,7 +38,7 @@ function ftbmon() {
     server_check
     sleep 5
     epoch_time=$(date +%s)
-    last_backup="$(stat -c %X $(find ${server_path}/backup/ -type f -mtime -1 -iname "backup*.zip"|grep $(date +%b)|sort|tail -n 1) 2>/dev/null)"
+    last_backup="$(stat -c %X $(find ${backup_location} -type f -mtime -1 -iname "backup*.zip"|grep $(date +%b)|sort|tail -n 1) 2>/dev/null)"
     [[ -z $last_backup ]] && last_backup=1 ## 1 second epoch time to force a backup if none exists.
     backup_time_diff=$(($epoch_time - $last_backup))
     if [[ $backup_time_diff -gt $backup_interval ]]
