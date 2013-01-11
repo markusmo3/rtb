@@ -28,8 +28,8 @@ backup_time=00:00:00 # Timestamp for when backups should be made (roughly) HH:MM
 restart_after_backup=0 # restart server after performing a scheduled backup at the time above.
 ###############################################################################
 function ftbmon() {
-  killall screen
-  killall inotifywait
+  kill $(ps faux | grep "java -Xms512M -Xmx4G -jar ${server_path}/FTB-Beta-A.jar" | grep -i screen | awk '{print $2}')
+  kill $(ps faux | grep inotifywait | grep $server_path | awk '{print $2}')
   sleep 55
   crashlog="$server_path/detected_crashes.txt"
   inotifywait -m -r --format '%:e %f' -e modify -e create $server_path/crash-reports/ > $crashlog &
@@ -59,13 +59,13 @@ function ftbmon() {
 function server_check() {
   if [[ "$(ps faux | grep FTB-Beta-A.jar|grep -v grep|grep -vi screen)" == "" ]]
    then echo -e "$(date) -- \e[0;31mServer NOT running...\e[0m  \e[0;33mAttempting to start.\e[0m"
-    killall screen
+    kill $(ps faux | grep "java -Xms512M -Xmx4G -jar ${server_path}/FTB-Beta-A.jar" | grep -i screen | awk '{print $2}')
     sleep 5
     screen -S "FTB-Server" -d -m -c /dev/null -- bash -c "$server_start;exec $SHELL"
     sleep 55
   elif [[ $(tail -n1 $crashlog | grep CREATE) ]]
    then echo -e "$(date) -- \e[0;31mServer crash detected...\e[0m  \e[0;33mAttempting to restart.\e[0m"
-    killall screen
+    kill $(ps faux | grep "java -Xms512M -Xmx4G -jar ${server_path}/FTB-Beta-A.jar" | grep -i screen | awk '{print $2}')
     sleep 5
     screen -S "FTB-Server" -d -m -c /dev/null -- bash -c "$server_start;exec $SHELL"
     echo "" > $crashlog
