@@ -9,9 +9,13 @@
 ##Path to the FTB jar file with no trailing slash /
 server_path="/home/minecraft/v8Mindcrack"
 ## FTB Server start command. (you can grab this from the .bat files)
-server_start="java -server -XX:UseSSE=4 -XX:+UseCMSCompactAtFullCollection -XX:ParallelGCThreads=4 -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:+UseCompressedOops -XX:+AggressiveOpts -Xmx6144M -jar ${server_path}/mindcrack.jar nogui"
+# For advanced users only.
+#server_start="java -server -XX:UseSSE=4 -XX:+UseCMSCompactAtFullCollection -XX:ParallelGCThreads=4 -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:+UseCompressedOops -XX:+AggressiveOpts -Xmx6144M -jar ${server_path}/mindcrack.jar nogui"
+# Default, use this if you dont know what above does.
+server_start="java -Xms512M -Xmx1G -jar mindcrack.jar"
+
 ##############Backup Options###################################################
-## When to make a restart and backup. (In your Hours only with 24hours format e.g. "06" for 6 a clock in the morning)
+## When to make a restart and backup. (In Hours only with 24hours format e.g. "06" for 6 a clock in the morning)
 backup_time="06" # time in 24 hours format when you want to backup
 backup_reset="01" # time in 24 hours format, used for not backup up thousand of times a hour (set to something not equal to backup_time)
 ## Backup location. No trailing slash /
