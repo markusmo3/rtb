@@ -12,7 +12,8 @@ server_path="/home/minecraft/v8Mindcrack"
 server_start="java -server -XX:UseSSE=4 -XX:+UseCMSCompactAtFullCollection -XX:ParallelGCThreads=4 -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:+UseCompressedOops -XX:+AggressiveOpts -Xmx6144M -jar ${server_path}/mindcrack.jar nogui"
 ##############Backup Options###################################################
 ## When to make a restart and backup. (In your Hours only with 24hours format e.g. "06" for 6 a clock in the morning)
-backup_time="06" # disabled, using custom backup time now.
+backup_time="06" # time in 24 hours format when you want to backup
+backup_reset="01" # time in 24 hours format, used for not backup up thousand of times a hour (set to something not equal to backup_time)
 ## Backup location. No trailing slash /
 ## Set to something OUTSIDE the server path or it'll recursively backup your backups.
 backup_location="/home/minecraft/backup"
@@ -25,6 +26,8 @@ keep_weekly_backup=0 # Same for weekly backup.
 keep_monthly_backup=0 # monthly
 backup_time=00:00:00 # Timestamp for when backups should be made (roughly) HH:MM:SS
 restart_after_backup=0 # restart server after performing a scheduled backup at the time above.
+####################IGNORE#####################################################
+allreadyBackedUp="0"
 ###############################################################################
 function ftbmon() {
   kill $(ps faux | grep "java -server*" | grep -i screen | awk '{print $2}')
@@ -40,7 +43,7 @@ function ftbmon() {
     last_backup="$(stat -c %X $(find ${backup_location} -type f -mtime -1 -iname "backup*.zip"|grep $(date +%b)|sort|tail -n 1) 2>/dev/null)"
     [[ -z $last_backup ]] && last_backup=1 ## 1 second epoch time to force a backup if none exists.
     backup_time_diff=$(($epoch_time - $last_backup))
-    if [[ $cur_time == $backup_time ]]
+    if [ $cur_time == $backup_time ] && [ $allreadyBackedUp == "0" ]
     then
       kill $(ps faux | grep "java -server*" | grep -i screen | awk '{print $2}')
       [[ ! -d $backup_location ]] && mkdir -p $backup_location
@@ -49,8 +52,15 @@ function ftbmon() {
       zip -r "${backup_file}" "${server_path}/world" &> /dev/null
       echo -e "$(date) -- \e[0;32mBacked Up Server files to\e[1;32m ${backup_file} \e[0m"
       find ${backup_location} -type f -name "backup-*.zip" -mtime +${backup_retention} -exec rm -fv "{}" \;
+      allreadyBackedUp="1"
       echo -e "$(date) -- \e[0;32mBackup done, starting Server again! \e[0m"
     fi
+
+    if [ $cur_time == $backup_reset ] && [ $allreadyBackedUp == "1" ]
+    then
+      allreadyBackedUp="0"
+    fi
+
     if [[ $use_extended_options = 1 ]]
      then extended_backup
     fi
