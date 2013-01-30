@@ -20,16 +20,19 @@ It can also perform backups of the server on set intervals to the /backup direct
 
 
 Changes: 
-  2013/01/30 by NooBxGockeL
+  
+2013/01/30 by NooBxGockeL
   * Rewritten the backup time system to backup everyday at a specific time
   * Changed start parameter to be more complicated, you might need to adjust those! (If you dont know how use standard ones provided)
   * Added a new Restart parameter, usefull for ingame restarting the server via the "/stop" command
-  2012/12/10
+  
+2012/12/10
   * Can configure custom backup locations (to dropbox, maybe?)
   * Can set backup retention time in days (default 15 days)
   * Fixed a bug where it would fail to back up if the backup dir wasn't already created.
   * Added an extended options function for the backups.  Nothing in it yet, but it's there.
-  2013/01/04
+  
+2013/01/04
   * Now runs the server in screen so that you can always use "screen -x" to connect to the screen and input commands.
   * Uses inotifywait to watch for changes to the crash-reports folder, kills and restarts server if crash is detected.
 
