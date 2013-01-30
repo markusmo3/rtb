@@ -20,6 +20,10 @@ It can also perform backups of the server on set intervals to the /backup direct
 
 
 Changes: 
+  2013/01/30 by NooBxGockeL
+  * Rewritten the backup time system to backup everyday at a specific time
+  * Changed start parameter to be more complicated, you might need to adjust those! (If you dont know how use standard ones provided)
+  * Added a new Restart parameter, usefull for ingame restarting the server via the "/stop" command
   2012/12/10
   * Can configure custom backup locations (to dropbox, maybe?)
   * Can set backup retention time in days (default 15 days)
